@@ -1,0 +1,14 @@
+homework2/
+
+.vs/
+
+social_network/.vs/
+social_network/Debug/
+social_network/social_network.sln
+social_network/social_network.vcxproj
+social_network/social_network.vcxproj.filters
+social_network/social_network.vcxproj.user
+social_network/Source.cpp
+
+
+

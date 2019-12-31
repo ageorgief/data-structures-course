@@ -3,9 +3,10 @@
 
 #include "Command.h"
 
+
 class DeleteCommand : public Command {
 private:
-
+	
 public:
 	DeleteCommand(std::string);
 	std::string execute();

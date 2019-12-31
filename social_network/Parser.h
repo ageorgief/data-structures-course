@@ -16,13 +16,11 @@
 class Parser {
 private:
 	std::string parseCommandName(std::string&);
-	int parseStringToInt(std::string&);
 	bool isName(std::string&) const;
 	std::list<std::string> tokenGenerator(std::string&);
 
 public:
 	ParseCommandResult parse(std::string&);
-
 };
 
 ParseCommandResult Parser::parse(std::string& input) {
@@ -49,7 +47,6 @@ ParseCommandResult Parser::parse(std::string& input) {
 	
 	if (!isName(lArgument)) {
 		return ParseCommandResult("Invalid name.");
-		//Error message: name is invalid
 	}
 
 	if (commandName == "find"){
@@ -72,7 +69,7 @@ ParseCommandResult Parser::parse(std::string& input) {
 	}
 
 	if (commandName == "create") {
-		int age = parseStringToInt(tokens.front());
+		int age = stoi(tokens.front());
 	
 		if (age < 1 || age > 120) {
 			return ParseCommandResult("Invalid age.");
@@ -124,15 +121,18 @@ ParseCommandResult Parser::parse(std::string& input) {
 
 std::list<std::string> Parser::tokenGenerator(std::string &input) {
 	std::list<std::string> tokens;
-	int pos = 0;
-	std::string delimiter = " ";
-	//npos is const for -1;
+	char delimiter = ' ';
+	int current, previous = 0;
+	current = input.find(delimiter);
 
-	while ((pos = input.find(delimiter)) != std::string::npos) {
-		std::string token = input.substr(0, pos);
-		tokens.push_back(token);
-		input.erase(0, pos + delimiter.length());
+	while (current != std::string::npos) {
+		tokens.push_back(input.substr(previous, current - previous));
+		previous = current + 1;
+		current = input.find(delimiter, previous);
 	}
+	tokens.push_back(input.substr(previous, current - previous));
+
+	return tokens;
 }
 
 std::string Parser::parseCommandName(std::string& input) {
@@ -142,20 +142,6 @@ std::string Parser::parseCommandName(std::string& input) {
 		commandName += input[index++];
 	}
 	return commandName;
-}
-
-int Parser::parseStringToInt(std::string &argument) {
-	int integer = 0;
-	int index = 1;
-
-	while (index < argument.length() && argument[index] >= '0' && index <= '9') {
-		integer *= 10;
-		integer += argument[index++] - 48;
-	}
-	if (index != argument.length() || argument[0] == '-') {
-		return -42;
-	}
-	return integer;
 }
 
 bool Parser::isName(std::string &name) const {

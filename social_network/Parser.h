@@ -16,7 +16,7 @@
 class Parser {
 private:
 	std::string parseCommandName(std::string&);
-	bool isName(std::string&) const;
+	std::string isValidName(std::string&) const;
 	std::list<std::string> tokenGenerator(std::string&);
 
 public:
@@ -45,10 +45,12 @@ ParseCommandResult Parser::parse(std::string& input) {
 	std::string lArgument = tokens.front();
 	tokens.pop_front();
 	
-	if (!isName(lArgument)) {
-		return ParseCommandResult("Invalid name.");
+	std::string nameValidationString = isValidName(lArgument);
+	
+	if (nameValidationString != "valid") {
+		return ParseCommandResult(nameValidationString);
 	}
-
+	
 	if (commandName == "find"){
 		command = new FindCommand(lArgument);
 		return ParseCommandResult("", command);
@@ -69,9 +71,19 @@ ParseCommandResult Parser::parse(std::string& input) {
 	}
 
 	if (commandName == "create") {
+		std::string ageString = tokens.front();
+		if (ageString[0] == '0') {
+			return ParseCommandResult("Invalid age.");
+		}
+		for (int i = 0; i < ageString.length(); i++) {
+	
+			if (ageString[i] < '0' || ageString[i] > '9' || i > 2) {
+				return ParseCommandResult("Invalid age.");
+			}
+		}
 		int age = stoi(tokens.front());
 	
-		if (age < 1 || age > 120) {
+		if (age > 120) {
 			return ParseCommandResult("Invalid age.");
 		}
 		command = new CreateCommand(lArgument, age);
@@ -81,8 +93,10 @@ ParseCommandResult Parser::parse(std::string& input) {
 	std::string rArgument = tokens.front();
 	tokens.pop_front();
 
-	if (isName(rArgument)) {
-		return ParseCommandResult("Invalid name.");
+	nameValidationString = isValidName(rArgument);
+
+	if (nameValidationString != "valid") {
+		return ParseCommandResult(nameValidationString);
 	}
 
 	if (commandName == "ban") {
@@ -96,24 +110,19 @@ ParseCommandResult Parser::parse(std::string& input) {
 	}
 	
 	if (commandName == "link") {
-		FriendshipType friendshipType;
-		std::string friendshipString = tokens.front();
+		if (tokens.empty()) {
+			return ParseCommandResult("No friendship type has been entered.");
+		}
+	
+		std::string friendshipType = tokens.front();
 		tokens.pop_front();
 
-		if (friendshipString == "bestie") {
-			friendshipType = BESTIE;
-		}
-		else if (friendshipString == "relative") {
-			friendshipType = RELATIVE;
-		}
-		else if (friendshipString == "normal") {
-			friendshipType = NORMAL;
-		}
-		else {
+		if (friendshipType != "bestie" && friendshipType != "relative" && friendshipType != "normal") {
 			return ParseCommandResult("Invalid friendship type.");
 		}
-
+		
 		command = new LinkCommand(lArgument, rArgument, friendshipType);
+	
 		return ParseCommandResult("", command);
 	}
 	return ParseCommandResult("Invalid input");
@@ -144,26 +153,26 @@ std::string Parser::parseCommandName(std::string& input) {
 	return commandName;
 }
 
-bool Parser::isName(std::string &name) const {
+std::string Parser::isValidName(std::string &name) const{
 	if (name.empty()) {
-		return false;
+		return "You have not entered name.";
 	}
 	
 	if (name.size() < 2) {
-		return false;
+		return "Name cannot contain less than 2 characters.";
 	}
 
 	if (name[0] < 'A' || name[0] > 'Z') {
-		return false;
+		return "Name should start with uppercase latin letter.";
 	}
 
 	for (int i = 1; i < name.length(); i++) {	
 	 if (name[i] < 'a' || name[i] > 'z') {
-			return false;
+		 return "Name cannot contain characters different than latin letters.";
 		}
 	}
 
-	return true;
+	return "valid";
 }
 #endif // !PARSER_H
 

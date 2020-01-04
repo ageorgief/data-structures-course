@@ -5,21 +5,21 @@
 class Friendship {
 private:
 	std::string name;
-	FriendshipType friendshipType;
+	std::string friendshipType;
 public:
-	Friendship(std::string&, FriendshipType);
+	Friendship(std::string&, std::string);
 	std::string getFriendName() const;
-	FriendshipType getFriendshipType() const;
+	std::string getFriendshipType() const;
 	friend bool operator< (const Friendship& lhs, const Friendship& rhs);
 };
 
-Friendship::Friendship(std::string& name, FriendshipType friendshipType) : name(name), friendshipType(friendshipType) {}
+Friendship::Friendship(std::string& name, std::string friendshipType) : name(name), friendshipType(friendshipType){}
 
 std::string Friendship::getFriendName() const {
 	return name;
 }
 
-FriendshipType Friendship::getFriendshipType() const {
+std::string Friendship::getFriendshipType() const {
 	return friendshipType;
 }
 

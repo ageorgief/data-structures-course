@@ -12,6 +12,7 @@ private:
     Output output;
     Parser parser;
     ParseCommandResult commandResult;
+    DataStorage storage;
 public:
     Engine();
     void start();
@@ -20,6 +21,7 @@ public:
 Engine::Engine() {}
 
 void Engine::start() {
+    storage.loadData();
     while (true) {
         std::string inputString = input.read();
         commandResult = parser.parse(inputString);
@@ -29,8 +31,9 @@ void Engine::start() {
             output.print(errorMessage);
         }
         else {
-            std::string commandExecutionMessage = commandResult.getCommand()->execute();
+            std::string commandExecutionMessage = commandResult.getCommand()->execute(storage);
             output.print(commandExecutionMessage);
+            storage.writeUsersDataToFile();
         }
     }
 }

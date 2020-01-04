@@ -20,7 +20,7 @@ public:
 	std::set<Friendship>& getFriends();
 	std::set<std::string>& getBannedUsers();
 	
-	bool addFriend(std::string&, FriendshipType);
+	bool addFriend(std::string&, std::string);
 	bool addBannedUser(std::string&);
 	
 };
@@ -43,8 +43,8 @@ std::set<std::string>& User::getBannedUsers(){
 	return bannedUsers;
 }
 
-bool User::addFriend(std::string& name, FriendshipType friednshipType) {
-	return friends.insert(Friendship(name, friednshipType)).second;
+bool User::addFriend(std::string& name, std::string friednshipType) {
+	return friends.insert(Friendship(name,  friednshipType)).second;
 }
 bool User::addBannedUser(std::string& name) {
 	return bannedUsers.insert(name).second;

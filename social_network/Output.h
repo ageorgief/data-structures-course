@@ -7,7 +7,8 @@ public:
 };
 
 void Output::print(std::string& output) const {
-	std::cout << output << std::endl;
+	std::cout << output <<  "------------------------------------------------------------------------------------------------------------------------" << std::endl;
+	
 }
 
 #endif // !OUTPUT_H

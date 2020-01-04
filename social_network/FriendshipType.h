@@ -1,7 +1,0 @@
-#ifndef FRIENDSHIPTYPE_H
-#define FRIENDSHIPTYPE_H
-
-enum  FriendshipType {
-	BESTIE, RELATIVE, NORMAL
-};
-#endif // !FRIENDSHIPTYPE_H

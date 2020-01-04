@@ -6,6 +6,7 @@
 #include <map>
 #include <fstream>
 #include "User.h"
+#include "Friendship.h"
 
 
 
@@ -22,15 +23,15 @@ public:
 	std::map<std::string, User>* getUserData();
 	void writeUsersDataToFile();
 	void loadData();
-	void addUser(User&);
+	bool addUser(User&);
 };
 
 std::map<std::string, User>* DataStorage::getUserData() {
 	return &userData;
 }
 
-void DataStorage::addUser(User& user) {
-	userData.insert({ user.getName(),user });
+bool DataStorage::addUser(User& user) {
+	return userData.insert({ user.getName(),user }).second;
 }
 void DataStorage::loadData() {
 	dataFile.open("user_data.txt", std::ios::in);
@@ -70,13 +71,13 @@ User DataStorage::parseUser(std::string& userString) {
 				std::list<std::string> parsedFriend = tokenGenerator(friendString, '-');
 				
 				if (parsedFriend.back() == "bestie") {
-					parsedUser.addFriend(parsedFriend.front(), BESTIE);
+					parsedUser.addFriend(parsedFriend.front(), "bestie");
 				}
 				if (parsedFriend.back() == "relative") {
-					parsedUser.addFriend(parsedFriend.front(), RELATIVE);
+					parsedUser.addFriend(parsedFriend.front(), "relative");
 				}
 				if (parsedFriend.back() == "normal") {
-					parsedUser.addFriend(parsedFriend.front(), NORMAL);
+					parsedUser.addFriend(parsedFriend.front(), "normal");
 				}
 				parsedFriend.pop_front();
 			}
@@ -134,18 +135,8 @@ std::string DataStorage::composeUser(User& user) {
 	for (std::set<Friendship>::iterator it = user.getFriends().begin(); it != user.getFriends().end(); it++) {
 		result += "(";
 		result += it->getFriendName();
-		result += ",";
-
-		if (it->getFriendshipType() == BESTIE) {
-			result += "bestie";
-		}
-		if (it->getFriendshipType() == RELATIVE) {
-			result += "relative";
-		}
-		if (it->getFriendshipType() == NORMAL) {
-			result += "normal";
-		}
-
+		result += "-";
+		result += it->getFriendshipType();
 		result += ")";
 		result += ",";
 	}

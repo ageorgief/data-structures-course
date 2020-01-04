@@ -22,7 +22,7 @@ bool ParseCommandResult::isError() const {
 	return !errorMessage.empty();
 }
 std::string ParseCommandResult::getErrorMessage() const {
-	return errorMessage;
+	return errorMessage + "\n";
 }
 Command* ParseCommandResult::getCommand() const {
 	return command;
